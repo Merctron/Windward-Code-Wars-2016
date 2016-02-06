@@ -32,7 +32,8 @@ import net.windward.Acquire.Units.StockOwner;
  */
 public class MyPlayerBrain {
 	// bugbug - put your team name here.
-	private static String NAME = "BoilerTron Lab Machine 5";
+
+	private static String NAME = "BoilerMerctron";
 
 	// bugbug - put your school name here. Must be 11 letters or less (ie use MIT, not Massachussets Institute of Technology).
 	public static String SCHOOL = "Purdue CS";
@@ -298,8 +299,8 @@ public class MyPlayerBrain {
 			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 20;
 			else safeBonus = 0;
 
-			int currScore = Math.round((chainLength/totalTiles)*100) + Math.round((startPrice/400)*200) + safeBonus + Math.round((currentPrice/maxPrice)*70);
-			if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 0) {
+			int currScore = Math.round((chainLength/totalTiles)*100) + Math.round((startPrice/400)*200) + safeBonus + Math.round((maxPrice/currentPrice)*70);
+			if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 1) {
 				optimalStockName = hotelChains.get(activeChains.get(j)).getName();
 				optimalStockScore = currScore;
 				optimalStockIndex = activeChains.get(j);
@@ -320,7 +321,7 @@ public class MyPlayerBrain {
 			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 100;
 			else safeBonus = 0;
 
-			int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus + Math.round((currentPrice/maxPrice));
+			int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus + Math.round((currentPrice/maxPrice)*100);
 			if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 0) {
 				optimalStockName = hotelChains.get(activeChains.get(j)).getName();
 				optimalStockScore = currScore;
@@ -340,7 +341,31 @@ public class MyPlayerBrain {
 		switch (rand.nextInt(3)) {
 			case 0:
 				turn.setCard(SpecialPowers.CARD_BUY_5_STOCK);
-				turn.getBuy().add(new HotelStock(hotelChains.get(rand.nextInt(hotelChains.size())), 3));
+
+				for (int k = 0; k < 5; k ++) {
+					optimalStockIndex = 0;
+					optimalStockScore = 0;
+					optimalStockName = "";
+
+					for (int j = 0; j < activeChains.size(); j++) {
+						int chainLength = hotelChains.get(activeChains.get(j)).getNumTiles();
+						int currentPrice = hotelChains.get(activeChains.get(j)).getStockPrice();
+						int startPrice = hotelChains.get(activeChains.get(j)).getStartPrice();
+						if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 100;
+						else safeBonus = 0;
+
+						int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus + Math.round((currentPrice/maxPrice)*100);
+						if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 0) {
+							optimalStockName = hotelChains.get(activeChains.get(j)).getName();
+							optimalStockScore = currScore;
+							optimalStockIndex = activeChains.get(j);
+						}
+					}
+
+					System.out.println("Optimal Stock: " + optimalStockName + ", " + optimalStockScore);
+					turn.getBuy().add(new HotelStock(hotelChains.get(optimalStockIndex), 1));
+				}
+
 				return turn;
 			case 1:
 				turn.setCard(SpecialPowers.CARD_FREE_3_STOCK);
@@ -348,8 +373,30 @@ public class MyPlayerBrain {
 			default:
 				if (me.getStock().size() > 0) {
 					turn.setCard(SpecialPowers.CARD_TRADE_2_STOCK);
+
+					optimalStockIndex = 0;
+					optimalStockScore = 0;
+					optimalStockName = "";
+
+					for (int j = 0; j < activeChains.size(); j++) {
+						int chainLength = hotelChains.get(activeChains.get(j)).getNumTiles();
+						int currentPrice = hotelChains.get(activeChains.get(j)).getStockPrice();
+						int startPrice = hotelChains.get(activeChains.get(j)).getStartPrice();
+						if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 100;
+						else safeBonus = 0;
+
+						int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus + Math.round((currentPrice/maxPrice)*100);
+						if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 0) {
+							optimalStockName = hotelChains.get(activeChains.get(j)).getName();
+							optimalStockScore = currScore;
+							optimalStockIndex = activeChains.get(j);
+						}
+					}
+
+					System.out.println("Optimal Stock: " + optimalStockName + ", " + optimalStockScore);
+
 					turn.getTrade().add(new PlayerTurn.TradeStock(me.getStock().get(rand.nextInt(me.getStock().size())).getChain(),
-							hotelChains.get(rand.nextInt(hotelChains.size()))));
+							hotelChains.get(optimalStockIndex)));
 				}
 				return turn;
 		}
@@ -480,6 +527,6 @@ public class MyPlayerBrain {
 				break;
 			}
 		// we sell, keep, & trade 1/3 of our shares in the defunct hotel
-		return new PlayerMerge(myStock.getNumShares() / 2, 0, (myStock.getNumShares() + 1) / 2);
+		return new PlayerMerge(0, 0, myStock.getNumShares());
 	}
 }
