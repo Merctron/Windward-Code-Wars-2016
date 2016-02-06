@@ -32,7 +32,7 @@ import net.windward.Acquire.Units.StockOwner;
  */
 public class MyPlayerBrain {
 	// bugbug - put your team name here.
-	private static String NAME = "BoilerTron Lab Machine 5";
+	private static String NAME = "mostly BoilerTron";
 
 	// bugbug - put your school name here. Must be 11 letters or less (ie use MIT, not Massachussets Institute of Technology).
 	public static String SCHOOL = "Purdue CS";
@@ -320,7 +320,7 @@ public class MyPlayerBrain {
 			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 100;
 			else safeBonus = 0;
 
-			int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus + Math.round((currentPrice/maxPrice));
+			int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus + Math.round((maxPrice/currentPrice));
 			if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 0) {
 				optimalStockName = hotelChains.get(activeChains.get(j)).getName();
 				optimalStockScore = currScore;
@@ -480,6 +480,6 @@ public class MyPlayerBrain {
 				break;
 			}
 		// we sell, keep, & trade 1/3 of our shares in the defunct hotel
-		return new PlayerMerge(myStock.getNumShares() / 2, 0, (myStock.getNumShares() + 1) / 2);
+		return new PlayerMerge(0, 0, myStock.getNumShares());//myStock.getNumShares() / 2, 0, (myStock.getNumShares() + 1) / 2);
 	}
 }
