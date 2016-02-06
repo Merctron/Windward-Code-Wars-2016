@@ -527,6 +527,6 @@ public class MyPlayerBrain {
 				break;
 			}
 		// we sell, keep, & trade 1/3 of our shares in the defunct hotel
-		return new PlayerMerge(myStock.getNumShares() / 2, 0, (myStock.getNumShares() + 1) / 2);
+		return new PlayerMerge(0, 0, myStock.getNumShares());
 	}
 }
