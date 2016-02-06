@@ -32,7 +32,7 @@ import net.windward.Acquire.Units.StockOwner;
  */
 public class MyPlayerBrain {
 	// bugbug - put your team name here.
-	private static String NAME = "BoilerTron X Laptop";
+	private static String NAME = "BoilerMerctron";
 
 	// bugbug - put your school name here. Must be 11 letters or less (ie use MIT, not Massachussets Institute of Technology).
 	public static String SCHOOL = "Purdue CS";
