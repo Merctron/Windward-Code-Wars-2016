@@ -146,8 +146,10 @@ public class MyPlayerBrain {
 		for(int[] adjacentIndex: adjacentIndices) {
 			int adjX = adjacentIndex[0];
 			int adjY = adjacentIndex[1];
-			if( map.getTiles(adjX, adjY).getType() == tileType ) {
-				return true;
+			if( adjX >= 0 && adjX < map.getWidth() && adjY >= 0 && adjY < map.getHeight() ) {
+				if( map.getTiles(adjX, adjY).getType() == tileType ) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -157,8 +159,10 @@ public class MyPlayerBrain {
 		for(int[] adjacentIndex: adjacentIndices) {
 			int adjX = adjacentIndex[0];
 			int adjY = adjacentIndex[1];
-			if( map.getTiles(adjX, adjY).getType() == tileType ) {
-				tiles.add(map.getTiles(adjX, adjY));
+			if( adjX >= 0 && adjX < map.getWidth() && adjY >= 0 && adjY < map.getHeight() ) {
+				if( map.getTiles(adjX, adjY).getType() == tileType ) {
+					tiles.add(map.getTiles(adjX, adjY));
+				}
 			}
 		}
 		return tiles;
@@ -311,6 +315,9 @@ public class MyPlayerBrain {
 					}
 				}
 			}
+		}
+		if( turn.tile == null ) {
+			turn.tile = me.getTiles().size() == 0 ? null : me.getTiles().get(rand.nextInt(me.getTiles().size()));
 		}
 		// we grab a random available hotel as the created hotel in case this tile creates a hotel
 		List<HotelChain> chainsByStartingPrice = new ArrayList<HotelChain>(hotelChains);// copy constructor
