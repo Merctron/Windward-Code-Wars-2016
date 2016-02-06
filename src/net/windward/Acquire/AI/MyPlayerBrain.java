@@ -99,6 +99,7 @@ public class MyPlayerBrain {
 	 */
 	public int QuerySpecialPowerBeforeTurn(GameMap map, Player me, List<HotelChain> hotelChains,
 	                                       List<Player> players) {
+		
 		// we randomly decide if we want to play a card.
 		// We don't worry if we still have the card as the server will ignore trying to use a card twice.
 		if (rand.nextInt(30) == 1)
@@ -119,6 +120,7 @@ public class MyPlayerBrain {
 	 * @return The tile(s) to play and the stock to purchase (and trade if CARD.TRADE_2_STOCK is played).
 	 */
 	public PlayerPlayTile QueryTileOnly(GameMap map, Player me, List<HotelChain> hotelChains, List<Player> players) {
+
 
 		PlayerPlayTile playTile = new PlayerPlayTile();
 		// we select a tile at random from our set
@@ -326,13 +328,43 @@ public class MyPlayerBrain {
 
 		// purchase random number of shares from random hotels.
 		// note - This can try to purchase a hotel not on the board (this is a very stupid AI)!
-//		turn.getBuy().add(new HotelStock(hotelChains.get(rand.nextInt(hotelChains.size())), 1 + rand.nextInt(3)));
-//		turn.getBuy().add(new HotelStock(hotelChains.get(rand.nextInt(hotelChains.size())), 1 + rand.nextInt(3)));
-		for(HotelChain hotel: hotelChains) {
-			if( hotel.getName().equals("JetBrains") ) {
-				turn.getBuy().add(new HotelStock(hotel, 999));
+
+
+		ArrayList<Integer> activeChains = new ArrayList<Integer>();
+		int totalTiles = 0;
+		int safeBonus = 0;
+		int maxPrice = 0;
+		for (int i = 0; i < hotelChains.size(); i++) {
+			if (hotelChains.get(i).isActive()) {
+				activeChains.add(i);
+				totalTiles += hotelChains.get(i).getNumTiles();
+				if (hotelChains.get(i).getStockPrice() > maxPrice) {
+					maxPrice = hotelChains.get(i).getStockPrice();
+				}
 			}
+
 		}
+
+		int optimalStockIndex = 0;
+		int optimalStockScore = 0;
+
+		for (int j = 0; j < activeChains.size(); j++) {
+			int chainLength = hotelChains.get(activeChains.get(j)).getNumTiles();
+			int currentPrice = hotelChains.get(activeChains.get(j)).getStockPrice();
+			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 50;
+			else safeBonus = 0;
+
+			int currScore = Math.round((chainLength/totalTiles)*100) + safeBonus + Math.round((currentPrice/maxPrice)*100);
+			if (optimalStockScore < currScore) {
+				optimalStockScore = currScore;
+				optimalStockIndex = activeChains.get(j);
+			}
+
+
+		}
+
+		turn.getBuy().add(new HotelStock(hotelChains.get(optimalStockIndex), 3));
+
 
 		if (rand.nextInt(20) != 1)
 			return turn;
@@ -370,6 +402,8 @@ public class MyPlayerBrain {
 	 */
 	public PlayerMerge QueryMergeStock(GameMap map, Player me, List<HotelChain> hotelChains, List<Player> players,
 	                                   HotelChain survivor, HotelChain defunct) {
+
+
 		HotelStock myStock = null;
 		for (HotelStock stock : me.getStock())
 			if (stock.getChain() == defunct) {
