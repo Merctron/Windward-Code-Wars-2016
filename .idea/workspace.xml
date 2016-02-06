@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fb99d969-95fa-4c0b-b579-96d1e5e69c6c" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java" afterPath="$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java" />
     </list>
     <ignored path="CodeWars2016JavaAI.iws" />
@@ -27,11 +28,15 @@
       <file leaf-file-name="MyPlayerBrain.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8504273">
-              <caret line="411" column="20" selection-start-line="411" selection-start-column="20" selection-end-line="411" selection-end-column="20" />
+            <state vertical-scroll-proportion="0.8076923">
+              <caret line="378" column="127" selection-start-line="378" selection-start-column="127" selection-end-line="378" selection-end-column="127" />
               <folding>
-                <element signature="e#6522#6523#0" expanded="true" />
-                <element signature="e#6543#6544#0" expanded="true" />
+                <element signature="e#1603#1604#0" expanded="true" />
+                <element signature="e#1628#1629#0" expanded="true" />
+                <element signature="e#1667#1668#0" expanded="true" />
+                <element signature="e#1693#1694#0" expanded="true" />
+                <element signature="e#6665#6666#0" expanded="true" />
+                <element signature="e#6686#6687#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -563,8 +568,12 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#6522#6523#0" expanded="true" />
-            <element signature="e#6543#6544#0" expanded="true" />
+            <element signature="e#1603#1604#0" expanded="true" />
+            <element signature="e#1628#1629#0" expanded="true" />
+            <element signature="e#1667#1668#0" expanded="true" />
+            <element signature="e#1693#1694#0" expanded="true" />
+            <element signature="e#6665#6666#0" expanded="true" />
+            <element signature="e#6686#6687#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -698,11 +707,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8504273">
-          <caret line="411" column="20" selection-start-line="411" selection-start-column="20" selection-end-line="411" selection-end-column="20" />
+        <state vertical-scroll-proportion="0.8076923">
+          <caret line="378" column="127" selection-start-line="378" selection-start-column="127" selection-end-line="378" selection-end-column="127" />
           <folding>
-            <element signature="e#6522#6523#0" expanded="true" />
-            <element signature="e#6543#6544#0" expanded="true" />
+            <element signature="e#1603#1604#0" expanded="true" />
+            <element signature="e#1628#1629#0" expanded="true" />
+            <element signature="e#1667#1668#0" expanded="true" />
+            <element signature="e#1693#1694#0" expanded="true" />
+            <element signature="e#6665#6666#0" expanded="true" />
+            <element signature="e#6686#6687#0" expanded="true" />
           </folding>
         </state>
       </provider>

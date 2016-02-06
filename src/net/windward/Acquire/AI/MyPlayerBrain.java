@@ -343,7 +343,7 @@ public class MyPlayerBrain {
 		}
 
 		if (me.getPowers().size() > 0) {
-			if (me.getPowers().contains(SpecialPowers.CARD_BUY_5_STOCK) && availableShares >= 5) {
+			if (me.getPowers().contains(SpecialPowers.CARD_BUY_5_STOCK) && availableShares >= 5 && turn.getCard() != SpecialPowers.CARD_BUY_5_STOCK) {
 				turn.setCard(SpecialPowers.CARD_BUY_5_STOCK);
 
 				for (int k = 0; k < 5; k ++) {
@@ -372,11 +372,11 @@ public class MyPlayerBrain {
 
 				return turn;
 			}
-			if (me.getPowers().contains(SpecialPowers.CARD_FREE_3_STOCK)) {
+			if (me.getPowers().contains(SpecialPowers.CARD_FREE_3_STOCK) && turn.getCard() != SpecialPowers.CARD_FREE_3_STOCK) {
 				turn.setCard(SpecialPowers.CARD_FREE_3_STOCK);
 				return turn;
 			}
-			if (me.getPowers().contains(SpecialPowers.CARD_TRADE_2_STOCK)) {
+			if (me.getPowers().contains(SpecialPowers.CARD_TRADE_2_STOCK) && turn.getCard() != SpecialPowers.CARD_TRADE_2_STOCK) {
 				if (me.getStock().size() > 0) {
 					turn.setCard(SpecialPowers.CARD_TRADE_2_STOCK);
 
