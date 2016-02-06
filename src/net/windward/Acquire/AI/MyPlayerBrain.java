@@ -32,6 +32,7 @@ import net.windward.Acquire.Units.StockOwner;
  */
 public class MyPlayerBrain {
 	// bugbug - put your team name here.
+
 	private static String NAME = "BoilerMerctron";
 
 	// bugbug - put your school name here. Must be 11 letters or less (ie use MIT, not Massachussets Institute of Technology).
@@ -431,12 +432,19 @@ public class MyPlayerBrain {
 					List<MapTile> adjacentHotelTiles = getAdjacentTilesOfType(map, tile.getX(), tile.getY(), MapTile.TYPE_HOTEL);
 					boolean allSame = true;
 					HotelChain allChain = null;
+					List<HotelChain> mergingChains = new ArrayList<HotelChain>();
 					for(MapTile mapTile: adjacentHotelTiles) {
 						if( allChain == null || allChain == mapTile.getHotel() ) {
 							allChain = mapTile.getHotel();
 						} else {
+							mergingChains.add(mapTile.getHotel());
 							allSame = false;
-							break;
+						}
+					}
+					for(HotelChain chain: mergingChains) {
+						if( chain.isSafe() ) {
+							// dont do stuff
+							continue;
 						}
 					}
 					
@@ -519,6 +527,6 @@ public class MyPlayerBrain {
 				break;
 			}
 		// we sell, keep, & trade 1/3 of our shares in the defunct hotel
-		return new PlayerMerge(0, 0, myStock.getNumShares());//myStock.getNumShares() / 3, myStock.getNumShares() / 3, (myStock.getNumShares() + 2) / 3);
+		return new PlayerMerge(myStock.getNumShares() / 2, 0, (myStock.getNumShares() + 1) / 2);
 	}
 }
