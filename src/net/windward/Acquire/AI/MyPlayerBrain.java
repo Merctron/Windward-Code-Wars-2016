@@ -9,19 +9,30 @@
 
 package net.windward.Acquire.AI;
 
-import net.windward.Acquire.Units.*;
-import org.apache.log4j.Logger;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import net.windward.Acquire.Units.GameMap;
+import net.windward.Acquire.Units.HotelChain;
+import net.windward.Acquire.Units.HotelStock;
+import net.windward.Acquire.Units.MapTile;
+import net.windward.Acquire.Units.Player;
+import net.windward.Acquire.Units.PlayerTile;
+import net.windward.Acquire.Units.SpecialPowers;
+import net.windward.Acquire.Units.StockOwner;
 
 /**
  * The sample C# AI. Start with this project but write your own code as this is a very simplistic implementation of the AI.
  */
 public class MyPlayerBrain {
 	// bugbug - put your team name here.
-	private static String NAME = "BoilerTron";
+	private static String NAME = "BoilerTron X Laptop";
 
 	// bugbug - put your school name here. Must be 11 letters or less (ie use MIT, not Massachussets Institute of Technology).
 	public static String SCHOOL = "Purdue CS";
@@ -53,7 +64,7 @@ public class MyPlayerBrain {
 	public final byte[] getAvatar() {
 		try {
 			// open image
-			InputStream stream = getClass().getResourceAsStream("/net/windward/Acquire/res/MyAvatar.png");
+			InputStream stream = getClass().getResourceAsStream("/net/windward/Acquire/res/boilertron.png");
 
 			byte[] avatar = new byte[stream.available()];
 			stream.read(avatar, 0, avatar.length);
@@ -127,6 +138,102 @@ public class MyPlayerBrain {
 			}
 		return playTile;
 	}
+	
+	int[][] adjacentIndices = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} };
+	public boolean hasAdjacentTileOfType(GameMap map, int x, int y, int tileType) {
+		for(int[] adjacentIndex: adjacentIndices) {
+			int adjX = adjacentIndex[0];
+			int adjY = adjacentIndex[1];
+			if( map.getTiles(adjX, adjY).getType() == tileType ) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public List<MapTile> getAdjacentTilesOfType(GameMap map, int x, int y, int tileType) {
+		List<MapTile> tiles = new ArrayList<MapTile>();
+		for(int[] adjacentIndex: adjacentIndices) {
+			int adjX = adjacentIndex[0];
+			int adjY = adjacentIndex[1];
+			if( map.getTiles(adjX, adjY).getType() == tileType ) {
+				tiles.add(map.getTiles(adjX, adjY));
+			}
+		}
+		return tiles;
+	}
+	
+	public static enum TileGoal { CREATE_COMPANY, MERGE, EXTEND, NONE };
+	
+	class ChainAndStocks {
+		HotelChain chain;
+		int stockAmount;
+		public ChainAndStocks(HotelChain chain, int stockAmount) {
+			this.chain = chain;
+			this.stockAmount = stockAmount;
+		}
+		public HotelChain getChain() {
+			return chain;
+		}
+		public void setChain(HotelChain chain) {
+			this.chain = chain;
+		}
+		public int getStockAmount() {
+			return stockAmount;
+		}
+		public void setStockAmount(int stockAmount) {
+			this.stockAmount = stockAmount;
+		}
+	}
+	
+	public boolean isAStockOwner(Player player, List<StockOwner> owners) {
+		for(StockOwner owner: owners) {
+			if( owner.getOwner().getName().equals(player.getName()) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public HotelChain chooseMergeSuccessor(List<HotelChain> chains, Player me) {
+		List<ChainAndStocks> myStockOwnerships = new ArrayList<ChainAndStocks>();
+		for(HotelChain chain: chains) {
+			StockOwner maxOwner = null;
+			for( StockOwner owner: chain.getOwners()) {
+				if( maxOwner == null || owner.getNumShares() > maxOwner.getNumShares() ) {
+					maxOwner = owner;
+				}
+			}
+			if( maxOwner != null && maxOwner.getOwner().getName().equals(me.getName()) ) {
+				myStockOwnerships.add(new ChainAndStocks(chain, maxOwner.getNumShares()));
+			}
+		}
+		Collections.sort(myStockOwnerships, new Comparator<ChainAndStocks>() {
+			@Override
+			public int compare(ChainAndStocks o1, ChainAndStocks o2) {
+				return -new Integer(o1.getStockAmount()).compareTo(new Integer(o2.getStockAmount()));
+			}
+		});
+		if( myStockOwnerships.size() > 0 ) {
+			return myStockOwnerships.get(0).getChain();
+		}
+		return null;
+	}
+	
+	public boolean isAGoodMerge(PlayerTile mergerTile, GameMap map, Player me, List<HotelChain> hotelChains, List<Player> players) {
+		List<HotelChain> mergingChains = new ArrayList<HotelChain>();
+		for(MapTile tile: getAdjacentTilesOfType(map, mergerTile.getX(), mergerTile.getY(), MapTile.TYPE_HOTEL)) {
+			mergingChains.add(tile.getHotel());
+		}
+		return chooseMergeSuccessor(mergingChains, me) != null;
+	}
+	
+	public HotelChain chooseBasicMerge(PlayerTile mergerTile, GameMap map, Player me, List<HotelChain> hotelChains, List<Player> players) {
+		List<HotelChain> mergingChains = new ArrayList<HotelChain>();
+		for(MapTile tile: getAdjacentTilesOfType(map, mergerTile.getX(), mergerTile.getY(), MapTile.TYPE_HOTEL)) {
+			mergingChains.add(tile.getHotel());
+		}
+		return chooseMergeSuccessor(mergingChains, me);
+	}
 
 	/**
 	 * Return what tile(s) to play and what stock(s) to purchase. At this point merges have not yet been processed.
@@ -137,28 +244,95 @@ public class MyPlayerBrain {
 	 * @return The tile(s) to play and the stock to purchase (and trade if CARD.TRADE_2_STOCK is played).
 	 */
 	public PlayerTurn QueryTileAndPurchase(GameMap map, Player me, List<HotelChain> hotelChains, List<Player> players) {
-
 		PlayerTurn turn = new PlayerTurn();
-		// we select a tile at random from our set
-		turn.tile = me.getTiles().size() == 0 ? null : me.getTiles().get(rand.nextInt(me.getTiles().size()));
-		// we grab a random available hotel as the created hotel in case this tile creates a hotel
-		for (HotelChain hotel : hotelChains)
-			if (! hotel.isActive()) {
-				turn.createdHotel = hotel;
+		
+		TileGoal tileGoal = TileGoal.NONE; // allows us to look at what our tile strategy was
+		// first, look for a place to form a new company
+		boolean atLeastOneInactiveCompany = false;
+		for(HotelChain hotelChain: hotelChains) {
+			if( !hotelChain.isActive() ) {
+				atLeastOneInactiveCompany = true;
+			}
+		}
+		for(PlayerTile tile: me.getTiles()) {
+			if( map.IsTileUnplayable(tile) ) {
+				// do not consider an unplayable tile
+				continue;
+			} else if( atLeastOneInactiveCompany && hasAdjacentTileOfType(map, tile.getX(), tile.getY(), MapTile.TYPE_SINGLE) ) {
+				turn.tile = tile;
+				tileGoal = TileGoal.CREATE_COMPANY;
 				break;
 			}
-		// We grab an existing hotel at random in case this tile merges multiple chains.
-		// note - the surviror may not be one of the hotels merged (this is a very stupid AI)!
-		for (HotelChain hotel : hotelChains)
-			if (hotel.isActive()) {
-				turn.mergeSurvivor = hotel;
+		}
+		// second, look for a place to make a beneficial merge
+		if( turn.tile == null ) {
+			for(PlayerTile tile: me.getTiles()) {
+				if( map.IsTileUnplayable(tile) ) {
+					// do not consider an unplayable tile
+					continue;
+				} else if( hasAdjacentTileOfType(map, tile.getX(), tile.getY(), MapTile.TYPE_HOTEL) ) {
+					List<MapTile> adjacentHotelTiles = getAdjacentTilesOfType(map, tile.getX(), tile.getY(), MapTile.TYPE_HOTEL);
+					if( adjacentHotelTiles.size() > 1 && isAGoodMerge(tile, map, me, hotelChains, players) ) {
+						// if its a merge, determine if we benefit
+						turn.tile = tile;
+						turn.mergeSurvivor = chooseBasicMerge(tile, map, me, hotelChains, players);
+						tileGoal = TileGoal.MERGE;
+						break;
+					}
+				}
+			}
+		}
+		// third, look for a place to extend one of our companies
+		if( turn.tile == null ) {
+			for(PlayerTile tile: me.getTiles()) {
+				if( map.IsTileUnplayable(tile) ) {
+					// do not consider an unplayable tile
+					continue;
+				} else if( hasAdjacentTileOfType(map, tile.getX(), tile.getY(), MapTile.TYPE_HOTEL) ) {
+					List<MapTile> adjacentHotelTiles = getAdjacentTilesOfType(map, tile.getX(), tile.getY(), MapTile.TYPE_HOTEL);
+					boolean allSame = true;
+					HotelChain allChain = null;
+					for(MapTile mapTile: adjacentHotelTiles) {
+						if( allChain == null || allChain == mapTile.getHotel() ) {
+							allChain = mapTile.getHotel();
+						} else {
+							allSame = false;
+							break;
+						}
+					}
+					
+					if( allSame && (isAStockOwner(me, allChain.getFirstMajorityOwners()) || isAStockOwner(me, allChain.getSecondMajorityOwners())) ) {
+						// if its a merge
+						turn.tile = tile;
+						tileGoal = TileGoal.EXTEND;
+						break;
+					}
+				}
+			}
+		}
+		// we grab a random available hotel as the created hotel in case this tile creates a hotel
+		List<HotelChain> chainsByStartingPrice = new ArrayList<HotelChain>(hotelChains);// copy constructor
+		Collections.sort(chainsByStartingPrice, new Comparator<HotelChain>() {
+			@Override
+			public int compare(HotelChain o1, HotelChain o2) {
+				return -new Integer(o1.getStartPrice()).compareTo(o2.getStartPrice());
+			}
+		});
+		for (HotelChain hotel : chainsByStartingPrice)
+			if (!hotel.isActive()) {
+				turn.createdHotel = hotel;
 				break;
 			}
 
 		// purchase random number of shares from random hotels.
 		// note - This can try to purchase a hotel not on the board (this is a very stupid AI)!
-		turn.getBuy().add(new HotelStock(hotelChains.get(rand.nextInt(hotelChains.size())), 1 + rand.nextInt(3)));
-		turn.getBuy().add(new HotelStock(hotelChains.get(rand.nextInt(hotelChains.size())), 1 + rand.nextInt(3)));
+//		turn.getBuy().add(new HotelStock(hotelChains.get(rand.nextInt(hotelChains.size())), 1 + rand.nextInt(3)));
+//		turn.getBuy().add(new HotelStock(hotelChains.get(rand.nextInt(hotelChains.size())), 1 + rand.nextInt(3)));
+		for(HotelChain hotel: hotelChains) {
+			if( hotel.getName().equals("JetBrains") ) {
+				turn.getBuy().add(new HotelStock(hotel, 999));
+			}
+		}
 
 		if (rand.nextInt(20) != 1)
 			return turn;
