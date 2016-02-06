@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e954a241-d7be-4501-b47e-9251f0e4a09e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java" afterPath="$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/windward/Acquire/Framework.java" afterPath="$PROJECT_DIR$/src/net/windward/Acquire/Framework.java" />
     </list>
     <ignored path="Windward-Code-Wars-2016.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,9 +27,28 @@
       <file leaf-file-name="MyPlayerBrain.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.1923077">
-              <caret line="34" column="48" selection-start-line="34" selection-start-column="48" selection-end-line="34" selection-end-column="48" />
-              <folding />
+            <state vertical-scroll-proportion="0.5940171">
+              <caret line="323" column="78" selection-start-line="323" selection-start-column="78" selection-end-line="323" selection-end-column="78" />
+              <folding>
+                <element signature="e#5607#5616#0" expanded="true" />
+                <element signature="e#6241#6242#0" expanded="true" />
+                <element signature="e#6262#6263#0" expanded="true" />
+                <element signature="e#6305#6306#0" expanded="true" />
+                <element signature="e#6332#6333#0" expanded="true" />
+                <element signature="e#6364#6365#0" expanded="true" />
+                <element signature="e#6391#6392#0" expanded="true" />
+                <element signature="e#6439#6440#0" expanded="true" />
+                <element signature="e#6478#6479#0" expanded="true" />
+                <element signature="e#6835#6851#0" expanded="true" />
+                <element signature="e#7288#7496#0" expanded="true" />
+                <element signature="e#7495#7496#0" expanded="true" />
+                <element signature="e#7787#7799#0" expanded="true" />
+                <element signature="e#8203#8215#0" expanded="true" />
+                <element signature="e#9163#9175#0" expanded="true" />
+                <element signature="e#9251#9432#0" expanded="true" />
+                <element signature="e#9431#9432#0" expanded="true" />
+                <element signature="e#9759#9768#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -512,9 +529,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.1923077">
-          <caret line="34" column="48" selection-start-line="34" selection-start-column="48" selection-end-line="34" selection-end-column="48" />
-          <folding />
+        <state vertical-scroll-proportion="0.5940171">
+          <caret line="323" column="78" selection-start-line="323" selection-start-column="78" selection-end-line="323" selection-end-column="78" />
+          <folding>
+            <element signature="e#5607#5616#0" expanded="true" />
+            <element signature="e#6241#6242#0" expanded="true" />
+            <element signature="e#6262#6263#0" expanded="true" />
+            <element signature="e#6305#6306#0" expanded="true" />
+            <element signature="e#6332#6333#0" expanded="true" />
+            <element signature="e#6364#6365#0" expanded="true" />
+            <element signature="e#6391#6392#0" expanded="true" />
+            <element signature="e#6439#6440#0" expanded="true" />
+            <element signature="e#6478#6479#0" expanded="true" />
+            <element signature="e#6835#6851#0" expanded="true" />
+            <element signature="e#7288#7496#0" expanded="true" />
+            <element signature="e#7495#7496#0" expanded="true" />
+            <element signature="e#7787#7799#0" expanded="true" />
+            <element signature="e#8203#8215#0" expanded="true" />
+            <element signature="e#9163#9175#0" expanded="true" />
+            <element signature="e#9251#9432#0" expanded="true" />
+            <element signature="e#9431#9432#0" expanded="true" />
+            <element signature="e#9759#9768#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

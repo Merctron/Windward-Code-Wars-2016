@@ -305,7 +305,23 @@ public class MyPlayerBrain {
 		}
 
 		System.out.println("Optimal Stock: " + optimalStockName + ", " + optimalStockScore);
-		turn.getBuy().add(new HotelStock(hotelChains.get(optimalStockIndex), 3));
+		turn.getBuy().add(new HotelStock(hotelChains.get(optimalStockIndex), 2));
+
+		for (int j = 0; j < activeChains.size(); j++) {
+			int chainLength = hotelChains.get(activeChains.get(j)).getNumTiles();
+			int currentPrice = hotelChains.get(activeChains.get(j)).getStockPrice();
+			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 100;
+			else safeBonus = 0;
+
+			int currScore = Math.round((chainLength/totalTiles)*150) + safeBonus + Math.round((maxPrice/currentPrice));
+			if (optimalStockScore < currScore) {
+				optimalStockScore = currScore;
+				optimalStockIndex = activeChains.get(j);
+			}
+		}
+
+		System.out.println("Optimal Stock: " + optimalStockName + ", " + optimalStockScore);
+		turn.getBuy().add(new HotelStock(hotelChains.get(optimalStockIndex), 1));
 
 
 		if (rand.nextInt(20) != 1)
