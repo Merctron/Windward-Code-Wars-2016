@@ -88,6 +88,7 @@ public class MyPlayerBrain {
 		// get your AI initialized here.
 	}
 
+	int turnIndex = 0;
 	/**
 	 * Asks if you want to play the CARD.DRAW_5_TILES or CARD.PLACE_4_TILES special power. This call will not be made
 	 * if you have already played these cards.
@@ -99,12 +100,12 @@ public class MyPlayerBrain {
 	 */
 	public int QuerySpecialPowerBeforeTurn(GameMap map, Player me, List<HotelChain> hotelChains,
 	                                       List<Player> players) {
-		
+		turnIndex++;
 		// we randomly decide if we want to play a card.
 		// We don't worry if we still have the card as the server will ignore trying to use a card twice.
 		PlayerPlayTile tilePlay = new PlayerPlayTile();
 		TileGoal tilePlacementGoal = chooseTilePlacement(map, me, hotelChains, players, tilePlay);
-		if (me.getPowers().contains(SpecialPowers.CARD_PLACE_4_TILES) || (rand.nextInt(3) == 1 && tilePlacementGoal != TileGoal.NONE))
+		if (turnIndex >= 2 && me.getPowers().contains(SpecialPowers.CARD_PLACE_4_TILES) )//&& (rand.nextInt(3) == 1 || tilePlacementGoal != TileGoal.NONE))
 			return SpecialPowers.CARD_PLACE_4_TILES;
 		if (me.getPowers().contains(SpecialPowers.CARD_DRAW_5_TILES) && (rand.nextInt(3) == 1 || tilePlacementGoal == TileGoal.NONE || me.getTiles().size() <= 3))
 			return SpecialPowers.CARD_DRAW_5_TILES;
