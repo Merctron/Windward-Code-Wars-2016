@@ -254,19 +254,6 @@ public class MyPlayerBrain {
 		PlayerTurn turn = new PlayerTurn();
 		
 		chooseTilePlacement(map, me, hotelChains, players, turn);
-		// we grab a random available hotel as the created hotel in case this tile creates a hotel
-		List<HotelChain> chainsByStartingPrice = new ArrayList<HotelChain>(hotelChains);// copy constructor
-		Collections.sort(chainsByStartingPrice, new Comparator<HotelChain>() {
-			@Override
-			public int compare(HotelChain o1, HotelChain o2) {
-				return -new Integer(o1.getStartPrice()).compareTo(o2.getStartPrice());
-			}
-		});
-		for (HotelChain hotel : chainsByStartingPrice)
-			if (!hotel.isActive()) {
-				turn.createdHotel = hotel;
-				break;
-			}
 
 		// purchase random number of shares from random hotels.
 		// note - This can try to purchase a hotel not on the board (this is a very stupid AI)!
@@ -400,6 +387,19 @@ public class MyPlayerBrain {
 		if( turn.tile == null ) {
 			turn.tile = me.getTiles().size() == 0 ? null : me.getTiles().get(rand.nextInt(me.getTiles().size()));
 		}
+		// we grab a random available hotel as the created hotel in case this tile creates a hotel
+		List<HotelChain> chainsByStartingPrice = new ArrayList<HotelChain>(hotelChains);// copy constructor
+		Collections.sort(chainsByStartingPrice, new Comparator<HotelChain>() {
+			@Override
+			public int compare(HotelChain o1, HotelChain o2) {
+				return -new Integer(o1.getStartPrice()).compareTo(o2.getStartPrice());
+			}
+		});
+		for (HotelChain hotel : chainsByStartingPrice)
+			if (!hotel.isActive()) {
+				turn.createdHotel = hotel;
+				break;
+			}
 	}
 
 	/**
