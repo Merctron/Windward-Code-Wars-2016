@@ -104,10 +104,10 @@ public class MyPlayerBrain {
 		// We don't worry if we still have the card as the server will ignore trying to use a card twice.
 		PlayerPlayTile tilePlay = new PlayerPlayTile();
 		TileGoal tilePlacementGoal = chooseTilePlacement(map, me, hotelChains, players, tilePlay);
+		if (me.getPowers().contains(SpecialPowers.CARD_PLACE_4_TILES) || (rand.nextInt(3) == 1 && tilePlacementGoal != TileGoal.NONE))
+			return SpecialPowers.CARD_PLACE_4_TILES;
 		if (rand.nextInt(3) == 1 && tilePlacementGoal == TileGoal.NONE)
 			return SpecialPowers.CARD_DRAW_5_TILES;
-		if (rand.nextInt(3) == 1 && tilePlacementGoal != TileGoal.NONE)
-			return SpecialPowers.CARD_PLACE_4_TILES;
 		return SpecialPowers.CARD_NONE;
 	}
 
