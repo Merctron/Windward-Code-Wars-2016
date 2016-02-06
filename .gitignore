@@ -12,6 +12,7 @@
 hs_err_pid*
 /bin/
 
+# User-specific stuff:
 .idea/
 *.iml
 *.iws
