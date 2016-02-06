@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e954a241-d7be-4501-b47e-9251f0e4a09e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java" afterPath="$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java" />
     </list>
     <ignored path="Windward-Code-Wars-2016.iws" />
@@ -28,8 +27,8 @@
       <file leaf-file-name="MyPlayerBrain.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.74025977">
-              <caret line="529" column="35" selection-start-line="529" selection-start-column="35" selection-end-line="529" selection-end-column="35" />
+            <state vertical-scroll-proportion="-0.72077924">
+              <caret line="301" column="115" selection-start-line="301" selection-start-column="115" selection-end-line="301" selection-end-column="115" />
               <folding>
                 <element signature="e#1604#1605#0" expanded="true" />
                 <element signature="e#1629#1630#0" expanded="true" />
@@ -51,10 +50,10 @@
                 <element signature="e#8421#8433#0" expanded="true" />
                 <element signature="e#8837#8849#0" expanded="true" />
                 <element signature="e#9848#9857#0" expanded="true" />
-                <element signature="e#16414#16426#0" expanded="true" />
-                <element signature="e#18406#18418#0" expanded="true" />
-                <element signature="e#18494#18675#0" expanded="true" />
-                <element signature="e#18674#18675#0" expanded="true" />
+                <element signature="e#16289#16301#0" expanded="true" />
+                <element signature="e#18281#18293#0" expanded="true" />
+                <element signature="e#18369#18550#0" expanded="true" />
+                <element signature="e#18549#18550#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -412,7 +411,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24878837" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -467,10 +466,10 @@
             <element signature="e#8421#8433#0" expanded="true" />
             <element signature="e#8837#8849#0" expanded="true" />
             <element signature="e#9848#9857#0" expanded="true" />
-            <element signature="e#16414#16426#0" expanded="true" />
-            <element signature="e#18406#18418#0" expanded="true" />
-            <element signature="e#18494#18675#0" expanded="true" />
-            <element signature="e#18674#18675#0" expanded="true" />
+            <element signature="e#16289#16301#0" expanded="true" />
+            <element signature="e#18281#18293#0" expanded="true" />
+            <element signature="e#18369#18550#0" expanded="true" />
+            <element signature="e#18549#18550#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -508,10 +507,10 @@
             <element signature="e#8421#8433#0" expanded="true" />
             <element signature="e#8837#8849#0" expanded="true" />
             <element signature="e#9848#9857#0" expanded="true" />
-            <element signature="e#16414#16426#0" expanded="true" />
-            <element signature="e#18406#18418#0" expanded="true" />
-            <element signature="e#18494#18675#0" expanded="true" />
-            <element signature="e#18674#18675#0" expanded="true" />
+            <element signature="e#16289#16301#0" expanded="true" />
+            <element signature="e#18281#18293#0" expanded="true" />
+            <element signature="e#18369#18550#0" expanded="true" />
+            <element signature="e#18549#18550#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -549,8 +548,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/net/windward/Acquire/AI/MyPlayerBrain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.74025977">
-          <caret line="529" column="35" selection-start-line="529" selection-start-column="35" selection-end-line="529" selection-end-column="35" />
+        <state vertical-scroll-proportion="-0.72077924">
+          <caret line="301" column="115" selection-start-line="301" selection-start-column="115" selection-end-line="301" selection-end-column="115" />
           <folding>
             <element signature="e#1604#1605#0" expanded="true" />
             <element signature="e#1629#1630#0" expanded="true" />
@@ -572,10 +571,10 @@
             <element signature="e#8421#8433#0" expanded="true" />
             <element signature="e#8837#8849#0" expanded="true" />
             <element signature="e#9848#9857#0" expanded="true" />
-            <element signature="e#16414#16426#0" expanded="true" />
-            <element signature="e#18406#18418#0" expanded="true" />
-            <element signature="e#18494#18675#0" expanded="true" />
-            <element signature="e#18674#18675#0" expanded="true" />
+            <element signature="e#16289#16301#0" expanded="true" />
+            <element signature="e#18281#18293#0" expanded="true" />
+            <element signature="e#18369#18550#0" expanded="true" />
+            <element signature="e#18549#18550#0" expanded="true" />
           </folding>
         </state>
       </provider>
