@@ -332,14 +332,18 @@ public class MyPlayerBrain {
 		System.out.println("Optimal Stock: " + optimalStockName + ", " + optimalStockScore);
 		turn.getBuy().add(new HotelStock(hotelChains.get(optimalStockIndex), 1));
 
-
-		if (rand.nextInt(20) != 1)
-			return turn;
-
 		// randomly occasionally play one of the cards
 		// We don't worry if we still have the card as the server will ignore trying to use a card twice.
-		switch (rand.nextInt(3)) {
-			case 0:
+
+		int availableShares = 0;
+		for (int p = 0; p < hotelChains.size(); p++) {
+			if (hotelChains.get(p).isActive()) {
+				availableShares += hotelChains.get(p).getNumAvailableShares();
+			}
+		}
+
+		if (me.getPowers().size() > 0) {
+			if (me.getPowers().contains(SpecialPowers.CARD_BUY_5_STOCK) && availableShares >= 5) {
 				turn.setCard(SpecialPowers.CARD_BUY_5_STOCK);
 
 				for (int k = 0; k < 5; k ++) {
@@ -367,10 +371,12 @@ public class MyPlayerBrain {
 				}
 
 				return turn;
-			case 1:
+			}
+			if (me.getPowers().contains(SpecialPowers.CARD_FREE_3_STOCK)) {
 				turn.setCard(SpecialPowers.CARD_FREE_3_STOCK);
 				return turn;
-			default:
+			}
+			if (me.getPowers().contains(SpecialPowers.CARD_TRADE_2_STOCK)) {
 				if (me.getStock().size() > 0) {
 					turn.setCard(SpecialPowers.CARD_TRADE_2_STOCK);
 
@@ -399,7 +405,11 @@ public class MyPlayerBrain {
 							hotelChains.get(optimalStockIndex)));
 				}
 				return turn;
+			}
+
 		}
+
+		return turn;
 	}
 
 	private TileGoal chooseTilePlacement(GameMap map, Player me, List<HotelChain> hotelChains, List<Player> players,
