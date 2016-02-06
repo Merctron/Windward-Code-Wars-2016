@@ -32,7 +32,7 @@ import net.windward.Acquire.Units.StockOwner;
  */
 public class MyPlayerBrain {
 	// bugbug - put your team name here.
-	private static String NAME = "BoilerTron";
+	private static String NAME = "BoilerTron Lab Machine 5";
 
 	// bugbug - put your school name here. Must be 11 letters or less (ie use MIT, not Massachussets Institute of Technology).
 	public static String SCHOOL = "Purdue CS";
@@ -298,7 +298,7 @@ public class MyPlayerBrain {
 			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 20;
 			else safeBonus = 0;
 
-			int currScore = Math.round((chainLength/totalTiles)*100) + Math.round((startPrice/400)*200) + safeBonus + Math.round((maxPrice/currentPrice)*70);
+			int currScore = Math.round((chainLength/totalTiles)*100) + Math.round((startPrice/400)*200) + safeBonus + Math.round((currentPrice/maxPrice)*70);
 			if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 0) {
 				optimalStockName = hotelChains.get(activeChains.get(j)).getName();
 				optimalStockScore = currScore;
@@ -320,7 +320,7 @@ public class MyPlayerBrain {
 			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 100;
 			else safeBonus = 0;
 
-			int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus + Math.round((maxPrice/currentPrice));
+			int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus + Math.round((currentPrice/maxPrice));
 			if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 0) {
 				optimalStockName = hotelChains.get(activeChains.get(j)).getName();
 				optimalStockScore = currScore;
@@ -385,12 +385,19 @@ public class MyPlayerBrain {
 					List<MapTile> adjacentHotelTiles = getAdjacentTilesOfType(map, tile.getX(), tile.getY(), MapTile.TYPE_HOTEL);
 					boolean allSame = true;
 					HotelChain allChain = null;
+					List<HotelChain> mergingChains = new ArrayList<HotelChain>();
 					for(MapTile mapTile: adjacentHotelTiles) {
 						if( allChain == null || allChain == mapTile.getHotel() ) {
 							allChain = mapTile.getHotel();
 						} else {
+							mergingChains.add(mapTile.getHotel());
 							allSame = false;
-							break;
+						}
+					}
+					for(HotelChain chain: mergingChains) {
+						if( chain.isSafe() ) {
+							// dont do stuff
+							continue;
 						}
 					}
 					
@@ -473,6 +480,6 @@ public class MyPlayerBrain {
 				break;
 			}
 		// we sell, keep, & trade 1/3 of our shares in the defunct hotel
-		return new PlayerMerge(0, 0, myStock.getNumShares());//myStock.getNumShares() / 3, myStock.getNumShares() / 3, (myStock.getNumShares() + 2) / 3);
+		return new PlayerMerge(myStock.getNumShares() / 2, 0, (myStock.getNumShares() + 1) / 2);
 	}
 }
