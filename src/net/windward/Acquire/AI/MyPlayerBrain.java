@@ -123,21 +123,22 @@ public class MyPlayerBrain {
 
 
 		PlayerPlayTile playTile = new PlayerPlayTile();
+		chooseTilePlacement(map, me, hotelChains, players, playTile);
 		// we select a tile at random from our set
-		playTile.tile = me.getTiles().size() == 0 ? null : me.getTiles().get(rand.nextInt(me.getTiles().size()));
-		// we grab a random available hotel as the created hotel in case this tile creates a hotel
-		for (HotelChain hotel : hotelChains)
-			if (! hotel.isActive()) {
-				playTile.createdHotel = hotel;
-				break;
-			}
-		// We grab an existing hotel at random in case this tile merges multiple chains.
-		// note - the surviror may not be one of the hotels merged (this is a very stupid AI)!
-		for (HotelChain hotel : hotelChains)
-			if (hotel.isActive()) {
-				playTile.mergeSurvivor = hotel;
-				break;
-			}
+//		playTile.tile = me.getTiles().size() == 0 ? null : me.getTiles().get(rand.nextInt(me.getTiles().size()));
+//		// we grab a random available hotel as the created hotel in case this tile creates a hotel
+//		for (HotelChain hotel : hotelChains)
+//			if (! hotel.isActive()) {
+//				playTile.createdHotel = hotel;
+//				break;
+//			}
+//		// We grab an existing hotel at random in case this tile merges multiple chains.
+//		// note - the surviror may not be one of the hotels merged (this is a very stupid AI)!
+//		for (HotelChain hotel : hotelChains)
+//			if (hotel.isActive()) {
+//				playTile.mergeSurvivor = hotel;
+//				break;
+//			}
 		return playTile;
 	}
 	
@@ -252,6 +253,86 @@ public class MyPlayerBrain {
 	public PlayerTurn QueryTileAndPurchase(GameMap map, Player me, List<HotelChain> hotelChains, List<Player> players) {
 		PlayerTurn turn = new PlayerTurn();
 		
+		chooseTilePlacement(map, me, hotelChains, players, turn);
+		// we grab a random available hotel as the created hotel in case this tile creates a hotel
+		List<HotelChain> chainsByStartingPrice = new ArrayList<HotelChain>(hotelChains);// copy constructor
+		Collections.sort(chainsByStartingPrice, new Comparator<HotelChain>() {
+			@Override
+			public int compare(HotelChain o1, HotelChain o2) {
+				return -new Integer(o1.getStartPrice()).compareTo(o2.getStartPrice());
+			}
+		});
+		for (HotelChain hotel : chainsByStartingPrice)
+			if (!hotel.isActive()) {
+				turn.createdHotel = hotel;
+				break;
+			}
+
+		// purchase random number of shares from random hotels.
+		// note - This can try to purchase a hotel not on the board (this is a very stupid AI)!
+
+
+		ArrayList<Integer> activeChains = new ArrayList<Integer>();
+		int totalTiles = 0;
+		int safeBonus = 0;
+		int maxPrice = 0;
+		for (int i = 0; i < hotelChains.size(); i++) {
+			if (hotelChains.get(i).isActive()) {
+				activeChains.add(i);
+				totalTiles += hotelChains.get(i).getNumTiles();
+				if (hotelChains.get(i).getStockPrice() > maxPrice) {
+					maxPrice = hotelChains.get(i).getStockPrice();
+				}
+			}
+
+		}
+
+		int optimalStockIndex = 0;
+		int optimalStockScore = 0;
+		String optimalStockName = "";
+
+		for (int j = 0; j < activeChains.size(); j++) {
+			int chainLength = hotelChains.get(activeChains.get(j)).getNumTiles();
+			int currentPrice = hotelChains.get(activeChains.get(j)).getStockPrice();
+			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 100;
+			else safeBonus = 0;
+
+			int currScore = Math.round((chainLength/totalTiles)*150) + safeBonus + Math.round((currentPrice/maxPrice)*100);
+			if (optimalStockScore < currScore) {
+				optimalStockScore = currScore;
+				optimalStockIndex = activeChains.get(j);
+			}
+		}
+
+		System.out.println("Optimal Stock: " + optimalStockName + ", " + optimalStockScore);
+		turn.getBuy().add(new HotelStock(hotelChains.get(optimalStockIndex), 3));
+
+
+		if (rand.nextInt(20) != 1)
+			return turn;
+
+		// randomly occasionally play one of the cards
+		// We don't worry if we still have the card as the server will ignore trying to use a card twice.
+		switch (rand.nextInt(3)) {
+			case 0:
+				turn.setCard(SpecialPowers.CARD_BUY_5_STOCK);
+				turn.getBuy().add(new HotelStock(hotelChains.get(rand.nextInt(hotelChains.size())), 3));
+				return turn;
+			case 1:
+				turn.setCard(SpecialPowers.CARD_FREE_3_STOCK);
+				return turn;
+			default:
+				if (me.getStock().size() > 0) {
+					turn.setCard(SpecialPowers.CARD_TRADE_2_STOCK);
+					turn.getTrade().add(new PlayerTurn.TradeStock(me.getStock().get(rand.nextInt(me.getStock().size())).getChain(),
+							hotelChains.get(rand.nextInt(hotelChains.size()))));
+				}
+				return turn;
+		}
+	}
+
+	private void chooseTilePlacement(GameMap map, Player me, List<HotelChain> hotelChains, List<Player> players,
+			PlayerPlayTile turn) {
 		TileGoal tileGoal = TileGoal.NONE; // allows us to look at what our tile strategy was
 		// first, look for a place to form a new company
 		boolean atLeastOneInactiveCompany = false;
@@ -319,83 +400,6 @@ public class MyPlayerBrain {
 		if( turn.tile == null ) {
 			turn.tile = me.getTiles().size() == 0 ? null : me.getTiles().get(rand.nextInt(me.getTiles().size()));
 		}
-		// we grab a random available hotel as the created hotel in case this tile creates a hotel
-		List<HotelChain> chainsByStartingPrice = new ArrayList<HotelChain>(hotelChains);// copy constructor
-		Collections.sort(chainsByStartingPrice, new Comparator<HotelChain>() {
-			@Override
-			public int compare(HotelChain o1, HotelChain o2) {
-				return -new Integer(o1.getStartPrice()).compareTo(o2.getStartPrice());
-			}
-		});
-		for (HotelChain hotel : chainsByStartingPrice)
-			if (!hotel.isActive()) {
-				turn.createdHotel = hotel;
-				break;
-			}
-
-		// purchase random number of shares from random hotels.
-		// note - This can try to purchase a hotel not on the board (this is a very stupid AI)!
-
-
-		ArrayList<Integer> activeChains = new ArrayList<Integer>();
-		int totalTiles = 0;
-		int safeBonus = 0;
-		int maxPrice = 0;
-		for (int i = 0; i < hotelChains.size(); i++) {
-			if (hotelChains.get(i).isActive()) {
-				activeChains.add(i);
-				totalTiles += hotelChains.get(i).getNumTiles();
-				if (hotelChains.get(i).getStockPrice() > maxPrice) {
-					maxPrice = hotelChains.get(i).getStockPrice();
-				}
-			}
-
-		}
-
-		int optimalStockIndex = 0;
-		int optimalStockScore = 0;
-		String optimalStockName = "";
-
-		for (int j = 0; j < activeChains.size(); j++) {
-			int chainLength = hotelChains.get(activeChains.get(j)).getNumTiles();
-			int currentPrice = hotelChains.get(activeChains.get(j)).getStockPrice();
-			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 100;
-			else safeBonus = 0;
-
-			int currScore = Math.round((chainLength/totalTiles)*150) + safeBonus + Math.round((currentPrice/maxPrice)*100);
-			if (optimalStockScore < currScore) {
-				optimalStockScore = currScore;
-				optimalStockIndex = activeChains.get(j);
-			}
-
-
-		}
-
-		System.out.println("Optimal Stock: " + optimalStockName + ", " + optimalStockScore);
-		turn.getBuy().add(new HotelStock(hotelChains.get(optimalStockIndex), 3));
-
-
-		if (rand.nextInt(20) != 1)
-			return turn;
-
-		// randomly occasionally play one of the cards
-		// We don't worry if we still have the card as the server will ignore trying to use a card twice.
-		switch (rand.nextInt(3)) {
-			case 0:
-				turn.setCard(SpecialPowers.CARD_BUY_5_STOCK);
-				turn.getBuy().add(new HotelStock(hotelChains.get(rand.nextInt(hotelChains.size())), 3));
-				return turn;
-			case 1:
-				turn.setCard(SpecialPowers.CARD_FREE_3_STOCK);
-				return turn;
-			default:
-				if (me.getStock().size() > 0) {
-					turn.setCard(SpecialPowers.CARD_TRADE_2_STOCK);
-					turn.getTrade().add(new PlayerTurn.TradeStock(me.getStock().get(rand.nextInt(me.getStock().size())).getChain(),
-							hotelChains.get(rand.nextInt(hotelChains.size()))));
-				}
-				return turn;
-		}
 	}
 
 	/**
@@ -420,6 +424,6 @@ public class MyPlayerBrain {
 				break;
 			}
 		// we sell, keep, & trade 1/3 of our shares in the defunct hotel
-		return new PlayerMerge(myStock.getNumShares() / 3, myStock.getNumShares() / 3, (myStock.getNumShares() + 2) / 3);
+		return new PlayerMerge(0, 0, myStock.getNumShares());//myStock.getNumShares() / 3, myStock.getNumShares() / 3, (myStock.getNumShares() + 2) / 3);
 	}
 }
