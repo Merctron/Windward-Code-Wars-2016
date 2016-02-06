@@ -282,11 +282,11 @@ public class MyPlayerBrain {
 			int chainLength = hotelChains.get(activeChains.get(j)).getNumTiles();
 			int currentPrice = hotelChains.get(activeChains.get(j)).getStockPrice();
 			int startPrice = hotelChains.get(activeChains.get(j)).getStartPrice();
-			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 100;
+			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 20;
 			else safeBonus = 0;
 
-			int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus + Math.round((currentPrice/maxPrice)*70);
-			if (optimalStockScore < currScore) {
+			int currScore = Math.round((chainLength/totalTiles)*100) + Math.round((startPrice/400)*200) + safeBonus + Math.round((maxPrice/currentPrice)*70);
+			if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 0) {
 				optimalStockName = hotelChains.get(activeChains.get(j)).getName();
 				optimalStockScore = currScore;
 				optimalStockIndex = activeChains.get(j);
@@ -308,7 +308,7 @@ public class MyPlayerBrain {
 			else safeBonus = 0;
 
 			int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus + Math.round((maxPrice/currentPrice));
-			if (optimalStockScore < currScore) {
+			if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 0) {
 				optimalStockName = hotelChains.get(activeChains.get(j)).getName();
 				optimalStockScore = currScore;
 				optimalStockIndex = activeChains.get(j);
