@@ -32,7 +32,7 @@ import net.windward.Acquire.Units.StockOwner;
  */
 public class MyPlayerBrain {
 	// bugbug - put your team name here.
-	private static String NAME = "mostly BoilerTron";
+	private static String NAME = "Mostly BoilerTron";
 
 	// bugbug - put your school name here. Must be 11 letters or less (ie use MIT, not Massachussets Institute of Technology).
 	public static String SCHOOL = "Purdue CS";
@@ -298,7 +298,7 @@ public class MyPlayerBrain {
 			if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 20;
 			else safeBonus = 0;
 
-			int currScore = Math.round((chainLength/totalTiles)*100) + Math.round((startPrice/400)*200) + safeBonus + Math.round((maxPrice/currentPrice)*70);
+			int currScore = Math.round((chainLength/totalTiles)*100) + Math.round((startPrice/400)*200) + safeBonus + Math.round((currentPrice/maxPrice))*70;
 			if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 1) {
 				optimalStockName = hotelChains.get(activeChains.get(j)).getName();
 				optimalStockScore = currScore;
@@ -353,7 +353,7 @@ public class MyPlayerBrain {
 						if (hotelChains.get(activeChains.get(j)).isSafe()) safeBonus = 100;
 						else safeBonus = 0;
 
-						int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus + Math.round((currentPrice/maxPrice)*100);
+						int currScore = Math.round((chainLength/totalTiles)*150) + Math.round((startPrice/400)*100) + safeBonus;
 						if (optimalStockScore < currScore && hotelChains.get(activeChains.get(j)).getNumAvailableShares() > 0) {
 							optimalStockName = hotelChains.get(activeChains.get(j)).getName();
 							optimalStockScore = currScore;
