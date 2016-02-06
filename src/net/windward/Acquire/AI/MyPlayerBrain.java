@@ -32,7 +32,6 @@ import net.windward.Acquire.Units.StockOwner;
  */
 public class MyPlayerBrain {
 	// bugbug - put your team name here.
-
 	private static String NAME = "BoilerMerctron";
 
 	// bugbug - put your school name here. Must be 11 letters or less (ie use MIT, not Massachussets Institute of Technology).
@@ -107,7 +106,7 @@ public class MyPlayerBrain {
 		TileGoal tilePlacementGoal = chooseTilePlacement(map, me, hotelChains, players, tilePlay);
 		if (me.getPowers().contains(SpecialPowers.CARD_PLACE_4_TILES) || (rand.nextInt(3) == 1 && tilePlacementGoal != TileGoal.NONE))
 			return SpecialPowers.CARD_PLACE_4_TILES;
-		if (rand.nextInt(3) == 1 && tilePlacementGoal == TileGoal.NONE)
+		if (me.getPowers().contains(SpecialPowers.CARD_DRAW_5_TILES) && (rand.nextInt(3) == 1 || tilePlacementGoal == TileGoal.NONE || me.getTiles().size() <= 3))
 			return SpecialPowers.CARD_DRAW_5_TILES;
 		return SpecialPowers.CARD_NONE;
 	}
