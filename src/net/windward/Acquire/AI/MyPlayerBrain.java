@@ -32,7 +32,7 @@ import net.windward.Acquire.Units.StockOwner;
  */
 public class MyPlayerBrain {
 	// bugbug - put your team name here.
-	private static String NAME = "BoilerMerctron";
+	private static String NAME = "BoilerTron";
 
 	// bugbug - put your school name here. Must be 11 letters or less (ie use MIT, not Massachussets Institute of Technology).
 	public static String SCHOOL = "Purdue CS";
@@ -102,9 +102,11 @@ public class MyPlayerBrain {
 		
 		// we randomly decide if we want to play a card.
 		// We don't worry if we still have the card as the server will ignore trying to use a card twice.
-		if (rand.nextInt(30) == 1)
+		PlayerPlayTile tilePlay = new PlayerPlayTile();
+		TileGoal tilePlacementGoal = chooseTilePlacement(map, me, hotelChains, players, tilePlay);
+		if (rand.nextInt(3) == 1 && tilePlacementGoal == TileGoal.NONE)
 			return SpecialPowers.CARD_DRAW_5_TILES;
-		if (rand.nextInt(30) == 1)
+		if (rand.nextInt(3) == 1 && tilePlacementGoal != TileGoal.NONE)
 			return SpecialPowers.CARD_PLACE_4_TILES;
 		return SpecialPowers.CARD_NONE;
 	}
@@ -202,8 +204,19 @@ public class MyPlayerBrain {
 	}
 	
 	public HotelChain chooseMergeSuccessor(List<HotelChain> chains, Player me) {
-		List<ChainAndStocks> myStockOwnerships = new ArrayList<ChainAndStocks>();
+		List<HotelChain> chainsThatCanWin = new ArrayList<HotelChain>();
+		int maxChainLength = 0;
 		for(HotelChain chain: chains) {
+			if( chain.getNumTiles() > maxChainLength ) {
+				chainsThatCanWin.clear();
+				maxChainLength = chain.getNumTiles();
+			}
+			if( chain.getNumTiles() >= maxChainLength ) {
+				chainsThatCanWin.add(chain);
+			}
+		}
+		List<ChainAndStocks> myStockOwnerships = new ArrayList<ChainAndStocks>();
+		for(HotelChain chain: chainsThatCanWin) {
 			StockOwner maxOwner = null;
 			for( StockOwner owner: chain.getOwners()) {
 				if( maxOwner == null || owner.getNumShares() > maxOwner.getNumShares() ) {
@@ -342,7 +355,7 @@ public class MyPlayerBrain {
 		}
 	}
 
-	private void chooseTilePlacement(GameMap map, Player me, List<HotelChain> hotelChains, List<Player> players,
+	private TileGoal chooseTilePlacement(GameMap map, Player me, List<HotelChain> hotelChains, List<Player> players,
 			PlayerPlayTile turn) {
 		TileGoal tileGoal = TileGoal.NONE; // allows us to look at what our tile strategy was
 		// first, look for a place to form a new company
@@ -370,7 +383,18 @@ public class MyPlayerBrain {
 					continue;
 				} else if( hasAdjacentTileOfType(map, tile.getX(), tile.getY(), MapTile.TYPE_HOTEL) ) {
 					List<MapTile> adjacentHotelTiles = getAdjacentTilesOfType(map, tile.getX(), tile.getY(), MapTile.TYPE_HOTEL);
-					if( adjacentHotelTiles.size() > 1 && isAGoodMerge(tile, map, me, hotelChains, players) ) {
+					boolean allSame = true;
+					HotelChain allChain = null;
+					for(MapTile mapTile: adjacentHotelTiles) {
+						if( allChain == null || allChain == mapTile.getHotel() ) {
+							allChain = mapTile.getHotel();
+						} else {
+							allSame = false;
+							break;
+						}
+					}
+					
+					if( !allSame && adjacentHotelTiles.size() > 1 && isAGoodMerge(tile, map, me, hotelChains, players) ) {
 						// if its a merge, determine if we benefit
 						turn.tile = tile;
 						turn.mergeSurvivor = chooseBasicMerge(tile, map, me, hotelChains, players);
@@ -424,6 +448,7 @@ public class MyPlayerBrain {
 				turn.createdHotel = hotel;
 				break;
 			}
+		return tileGoal;
 	}
 
 	/**
