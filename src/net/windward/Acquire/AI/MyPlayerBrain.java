@@ -307,6 +307,10 @@ public class MyPlayerBrain {
 		System.out.println("Optimal Stock: " + optimalStockName + ", " + optimalStockScore);
 		turn.getBuy().add(new HotelStock(hotelChains.get(optimalStockIndex), 2));
 
+		optimalStockIndex = 0;
+		optimalStockScore = 0;
+		optimalStockName = "";
+
 		for (int j = 0; j < activeChains.size(); j++) {
 			int chainLength = hotelChains.get(activeChains.get(j)).getNumTiles();
 			int currentPrice = hotelChains.get(activeChains.get(j)).getStockPrice();
